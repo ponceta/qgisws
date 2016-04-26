@@ -12,7 +12,7 @@ import os
 from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QDialogButtonBox
 from PyQt4.QtGui import QFileDialog
-from PyQt4.QtCore import QDir
+from PyQt4.QtCore import *
 from PyQt4.QtCore import pyqtSignal
 from fileinput_ui import Ui_file_browser
 
@@ -37,18 +37,21 @@ class Browser(QDialog, Ui_file_browser):
 
         # connect
         # TODO
+        #QObject.connect(self, self.pushButtonBrowse, SIGNAL('clicked()'), __browse)
+        self.pushButtonBrowse.clicked.connect(self.__browse)
+
 
     # -------------------------------------------------------------------------
     @property
     def filename(self):
-        # TODO
-        pass
+        return self._filename
+
 
     # -------------------------------------------------------------------------
     @filename.setter
     def filename(self, filename):
-        # TODO
-        pass
+        self._filename = filename
+
 
     # -------------------------------------------------------------------------
     # private methods
@@ -71,4 +74,9 @@ class Browser(QDialog, Ui_file_browser):
     # -------------------------------------------------------------------------
     def __browse(self):
         # TODO
-        pass
+        #myFileDialog = QFileDialog(self)
+        #myFileDialog.show()
+        self.filename = QFileDialog.getOpenFileName(self, 'Choose File', '.',  '*.csv',)
+        print(self.filename)
+        self.lineEditFileName.setText(self.filename)
+
