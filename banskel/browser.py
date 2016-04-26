@@ -8,18 +8,18 @@ from __future__ import unicode_literals, print_function, absolute_import, divisi
 # -----------------------------------------------------------------------------
 # standard
 import os
-
 # pyqt
 from PyQt4.QtGui import QDialog
 from PyQt4.QtGui import QDialogButtonBox
 from PyQt4.QtGui import QFileDialog
 from PyQt4.QtCore import QDir
 from PyQt4.QtCore import pyqtSignal
+from fileinput_ui import Ui_file_browser
 
 # -----------------------------------------------------------------------------
 # classes
 # -----------------------------------------------------------------------------
-class Browser(QDialog, ban_ui.Ui_Browser):
+class Browser(QDialog, Ui_file_browser):
 
     # -------------------------------------------------------------------------
     # public methods
