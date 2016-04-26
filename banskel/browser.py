@@ -15,6 +15,7 @@ from PyQt4.QtGui import QFileDialog
 from PyQt4.QtCore import *
 from PyQt4.QtCore import pyqtSignal
 from fileinput_ui import Ui_file_browser
+from projector import count_lines, transform_csv
 
 # -----------------------------------------------------------------------------
 # classes
@@ -28,6 +29,8 @@ class Browser(QDialog, Ui_file_browser):
     def __init__(self):
         QDialog.__init__(self)
         self.setupUi(self)
+        self._filename = ""
+        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
 
         # init attributes
         # TODO
@@ -50,7 +53,14 @@ class Browser(QDialog, Ui_file_browser):
     # -------------------------------------------------------------------------
     @filename.setter
     def filename(self, filename):
-        self._filename = filename
+        if os.path.isfile(filename):
+            self._filename = filename
+            self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(True)
+            count_lines(filename)
+            transform_csv(filename)
+        else:
+            print("Selected file : {file} is not a file".format(file=filename))
+
 
 
     # -------------------------------------------------------------------------
