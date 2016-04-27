@@ -15,7 +15,7 @@ from PyQt4.QtGui import QFileDialog
 from PyQt4.QtCore import *
 from PyQt4.QtCore import pyqtSignal
 from fileinput_ui import Ui_file_browser
-from projector import count_lines, transform_csv
+from projector import count_lines, transform_csv, Projector
 
 # -----------------------------------------------------------------------------
 # classes
@@ -31,7 +31,9 @@ class Browser(QDialog, Ui_file_browser):
         self.setupUi(self)
         self._filename = ""
         self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(False)
-
+        self.progressBar.setVisible(False)
+        self._my_projector = Projector()
+        self._my_projector.signal_in_progress.connect(self.__in_progress)
         # init attributes
         # TODO
 
@@ -42,6 +44,7 @@ class Browser(QDialog, Ui_file_browser):
         # TODO
         #QObject.connect(self, self.pushButtonBrowse, SIGNAL('clicked()'), __browse)
         self.pushButtonBrowse.clicked.connect(self.__browse)
+        #QtCore.QObject.connect(self.processThread, QtCore.SIGNAL("progress(int)"),self.progressBar, QtCore.SLOT("setValue(int)"), QtCore.Qt.QueuedConnection)
 
 
     # -------------------------------------------------------------------------
@@ -56,8 +59,12 @@ class Browser(QDialog, Ui_file_browser):
         if os.path.isfile(filename):
             self._filename = filename
             self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(True)
-            count_lines(filename)
-            transform_csv(filename)
+            self.progressBar.setVisible(True)
+            num_lines = count_lines(filename)
+            self.progressBar.setMaximum(num_lines)
+            self._my_projector.filename = filename
+            self._my_projector.start()
+
         else:
             print("Selected file : {file} is not a file".format(file=filename))
 
@@ -68,8 +75,8 @@ class Browser(QDialog, Ui_file_browser):
     # -------------------------------------------------------------------------
     # -------------------------------------------------------------------------
     def __in_progress(self, line):
-        # TODO
-        pass
+        self.progressBar.setValue(line)
+        print(line)
 
     # -------------------------------------------------------------------------
     def __compute_done(self):
