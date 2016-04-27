@@ -7,15 +7,18 @@ from __future__ import print_function, unicode_literals
 import os
 
 # '~' est un raccourci pour désigner le répertoire utilisateur.
+# os.path.expanduser va convertir ~ pour obtenir le chemin absolu sur le repertoire
 home_directory = os.path.expanduser('~')
+# retrieve all the files and directories in home as a list stored in variable file_list
 file_list = os.listdir(home_directory)
 
+# initialize various counters to zero
 count_dir = 0
 count_file = 0
 count_hidden = 0
 count_others = 0
 count = 0
-
+#
 for node in file_list:
     count = count + 1
     if node[0] == '.':
